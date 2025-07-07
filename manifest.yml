@@ -1,0 +1,7 @@
+---
+applications:
+  - name: hello-python
+    memory: 128M
+    buildpacks:
+      - python_buildpack
+    random-route: true
