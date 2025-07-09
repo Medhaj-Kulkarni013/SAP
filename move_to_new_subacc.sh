@@ -7,12 +7,12 @@ SPACE="dev"
 APP_NAME="hello-python"
 APP_DIR="." 
 
-echo "Logging into Cloud Foundry..."
+# "Logging into Cloud Foundry..."
 cf login -a $API_ENDPOINT
 
-echo "Targeting org and space..."
+# "Targeting org and space..."
 cf target -o "$ORG" -s "$SPACE"
 
-echo "Deploying app: $APP_NAME"
+# "Deploying app: $APP_NAME"
 cd "$APP_DIR"
 cf push "$APP_NAME"
