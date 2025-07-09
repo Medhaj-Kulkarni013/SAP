@@ -6,7 +6,6 @@ ORG="ee55f632trial_test-z2ow5x2b"
 SPACE="dev"
 APP_NAME="hello-python"
 APP_DIR="." 
-# --------------------------------------------
 
 echo "Logging into Cloud Foundry..."
 cf login -a $API_ENDPOINT
