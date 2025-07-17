@@ -1,0 +1,28 @@
+{
+    "ServerURL": "https://cli.btp.cloud.sap",
+    "UserName": "medhkulkarni.ext@deloitte.com",
+    "CustomIdp": "",
+    "Version": "2.83.0",
+    "TargetHierarchy": [
+        {
+            "Type": "globalaccount",
+            "Subdomain": "ee55f632trial-ga",
+            "ID": "8421655a-c427-4826-8508-c90ff03c16e7",
+            "DisplayName": "ee55f632trial",
+            "DirectoryFeatures": null
+        }
+    ],
+    "Authentication": {
+        "Mail": "medhkulkarni.ext@deloitte.com",
+        "Issuer": "accounts.sap.com"
+    },
+    "TrustedURLs": null,
+    "Autocomplete": null,
+    "Settings": {
+        "format": "default",
+        "login.securestore": "default",
+        "login.sso": "default",
+        "target.hierarchy": "default",
+        "verbose": "default"
+    }
+}
