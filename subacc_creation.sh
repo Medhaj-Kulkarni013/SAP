@@ -75,7 +75,7 @@ fi
 echo "🎯 Targeting Org: $CF_ORG_NAME"
 cf target -o "$CF_ORG_NAME"
 
-SPACE_NAME="space-${UUID_SUFFIX}"
+SPACE_NAME="dev"
 echo "🚀 Creating space: $SPACE_NAME"
 cf create-space "$SPACE_NAME"
 
@@ -85,3 +85,24 @@ else
   echo "❌ Failed to create space."
   exit 1
 fi
+
+# === Entitlement for CF ===
+CF_MEMORY=1  # 1 unit = 1 GB
+
+echo "Assigning Cloud Foundry Runtime entitlement ($CF_MEMORY unit)..."
+btp assign accounts/entitlement \
+  --to-subaccount "$SUBACC_ID" \
+  --for-service "APPLICATION_RUNTIME" \
+  --plan "MEMORY" \
+  --amount "$CF_MEMORY"
+
+sleep 10
+
+if [ $? -ne 0 ]; then
+  echo "❌ Failed to assign Cloud Foundry Runtime entitlement."
+  sleep 2
+  exit 1
+fi
+echo "✅ Entitlement assigned successfully."
+
+
