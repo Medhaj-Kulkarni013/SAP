@@ -1,9 +1,9 @@
 #!/bin/bash
 
-echo "🔐 Logging in to SAP BTP CLI..."
+echo "Logging in to SAP BTP CLI..."
 btp login --url https://cli.btp.cloud.sap
 if [ $? -ne 0 ]; then
-  echo "❌ Login failed."
+  echo "Login failed."
   exit 1
 fi
 
@@ -15,7 +15,7 @@ SUBACCOUNT_SUBDOMAIN="subacc-${UUID_SUFFIX}-${TIMESTAMP}"
 SUBACCOUNT_DISPLAY_NAME="Subaccount ${UUID_SUFFIX} ${TIMESTAMP}"
 CF_ORG_NAME="org-${UUID_SUFFIX}-${TIMESTAMP}"
 
-echo "🆕 Generated:"
+echo "Generated:"
 echo "  - Subdomain: $SUBACCOUNT_SUBDOMAIN"
 echo "  - Display Name: $SUBACCOUNT_DISPLAY_NAME"
 echo "  - CF Org Name: $CF_ORG_NAME"
@@ -24,22 +24,22 @@ echo "  - CF Org Name: $CF_ORG_NAME"
 REGIONS=("us10" "ap21")
 SELECTED_REGION="${REGIONS[$((RANDOM % ${#REGIONS[@]}))]}"
 
-echo "🌍 Creating subaccount in region: $SELECTED_REGION"
+echo "Creating subaccount in region: $SELECTED_REGION"
 btp create accounts/subaccount \
   --subdomain "$SUBACCOUNT_SUBDOMAIN" \
   --display-name "$SUBACCOUNT_DISPLAY_NAME" \
   --region "$SELECTED_REGION"
 
-echo "⏳ Waiting for subaccount provisioning..."
+echo "Waiting for subaccount provisioning..."
 sleep 35
 
 # === Get Subaccount ID ===
 SUBACC_ID=$(btp list accounts/subaccount | grep "$SUBACCOUNT_SUBDOMAIN" | awk '{print $1}')
 if [ -z "$SUBACC_ID" ]; then
-  echo "❌ Failed to retrieve Subaccount ID."
+  echo "Failed to retrieve Subaccount ID."
   exit 1
 fi
-echo "✅ Subaccount ID: $SUBACC_ID"
+echo "Subaccount ID: $SUBACC_ID"
 
 # === Enable Cloud Foundry Environment ===
 echo "🔧 Enabling Cloud Foundry with Org: $CF_ORG_NAME..."
@@ -51,7 +51,7 @@ btp create accounts/environment-instance \
   --plan "trial" \
   --parameters '{"instance_name": "'$CF_ORG_NAME'"}'
 
-echo "⏳ Waiting for Cloud Foundry environment to be ready..."
+echo "Waiting for Cloud Foundry environment to be ready..."
 sleep 20
 
 # === CF Login using SSO ===
@@ -64,7 +64,7 @@ else
   exit 1
 fi
 
-echo "🌐 Logging into Cloud Foundry via SSO..."
+echo "Logging into Cloud Foundry via SSO..."
 cf login -a "$CF_API" --sso
 if [ $? -ne 0 ]; then
   echo "❌ CF login failed."
@@ -72,17 +72,17 @@ if [ $? -ne 0 ]; then
 fi
 
 # === Target Org and Create Space ===
-echo "🎯 Targeting Org: $CF_ORG_NAME"
+echo "Targeting Org: $CF_ORG_NAME"
 cf target -o "$CF_ORG_NAME"
 
 SPACE_NAME="dev"
-echo "🚀 Creating space: $SPACE_NAME"
+echo "Creating space: $SPACE_NAME"
 cf create-space "$SPACE_NAME"
 
 if [ $? -eq 0 ]; then
-  echo "✅ Space '$SPACE_NAME' created successfully in Org '$CF_ORG_NAME'."
+  echo "Space '$SPACE_NAME' created successfully in Org '$CF_ORG_NAME'."
 else
-  echo "❌ Failed to create space."
+  echo "Failed to create space."
   exit 1
 fi
 
@@ -99,11 +99,11 @@ btp assign accounts/entitlement \
 sleep 10
 
 if [ $? -ne 0 ]; then
-  echo "❌ Failed to assign Cloud Foundry Runtime entitlement."
+  echo "Failed to assign Cloud Foundry Runtime entitlement."
   sleep 2
   exit 1
 fi
-echo "✅ Entitlement assigned successfully."
+echo "Entitlement assigned successfully."
 
 sleep 10
 
