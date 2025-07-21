@@ -31,7 +31,7 @@ btp create accounts/subaccount \
   --region "$SELECTED_REGION"
 
 echo "⏳ Waiting for subaccount provisioning..."
-sleep 45
+sleep 35
 
 # === Get Subaccount ID ===
 SUBACC_ID=$(btp list accounts/subaccount | grep "$SUBACCOUNT_SUBDOMAIN" | awk '{print $1}')
@@ -52,7 +52,7 @@ btp create accounts/environment-instance \
   --parameters '{"instance_name": "'$CF_ORG_NAME'"}'
 
 echo "⏳ Waiting for Cloud Foundry environment to be ready..."
-sleep 30
+sleep 20
 
 # === CF Login using SSO ===
 if [ "$SELECTED_REGION" == "us10" ]; then
@@ -87,7 +87,7 @@ else
 fi
 
 # === Entitlement for CF ===
-CF_MEMORY=1  # 1 unit = 1 GB
+CF_MEMORY=1
 
 echo "Assigning Cloud Foundry Runtime entitlement ($CF_MEMORY unit)..."
 btp assign accounts/entitlement \
@@ -105,4 +105,14 @@ if [ $? -ne 0 ]; then
 fi
 echo "✅ Entitlement assigned successfully."
 
+sleep 10
+
+# === Deploy ===
+APP_DIR="."
+APP_NAME="hello-python"
+
+cf target -o "$CF_ORG_NAME" -s "$SPACE"
+
+cd "$APP_DIR"
+cf push "$APP_NAME"
 
