@@ -21,8 +21,7 @@ echo "  - Display Name: $SUBACCOUNT_DISPLAY_NAME"
 echo "  - CF Org Name: $CF_ORG_NAME"
 
 # === Random Region Selection ===
-REGIONS=("us10" "ap21")
-SELECTED_REGION="${REGIONS[$((RANDOM % ${#REGIONS[@]}))]}"
+SELECTED_REGION="us10" #secondary datacenter is assumed as US
 
 echo "Creating subaccount in region: $SELECTED_REGION"
 btp create accounts/subaccount \
