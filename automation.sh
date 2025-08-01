@@ -11,6 +11,7 @@ fi
 # === Generate Unique Identifiers ===
 UUID_SUFFIX=$(cat /proc/sys/kernel/random/uuid | cut -d'-' -f1)
 TIMESTAMP=$(date +%s)
+ 
 SUBACCOUNT_SUBDOMAIN="subacc-${UUID_SUFFIX}-${TIMESTAMP}"
 SUBACCOUNT_DISPLAY_NAME="Subaccount ${UUID_SUFFIX} ${TIMESTAMP}"
 CF_ORG_NAME="org-${UUID_SUFFIX}-${TIMESTAMP}"
@@ -63,19 +64,22 @@ btp create accounts/environment-instance \
  
 echo "⏳ Waiting for Cloud Foundry environment to be ready..."
 
-sleep 40
+sleep 20
  
 # === Fetch CF Landscape and API ===
-LANDSCAPE=$(btp list accounts/environment-instance --subaccount "$SUBACC_ID" | tail -n +3 | awk '{print $NF}')
+LANDSCAPE=$(btp list accounts/environment-instance --subaccount "$SUBACC_ID" | tail -n +3 | awk ' NR>2 {print $NF}')
 if [ -z "$LANDSCAPE" ]; then
   echo "❌ Cloud Foundry landscape not found."
   exit 1
 fi
  
-CF_API="https://api.${LANDSCAPE}.hana.ondemand.com"
+# ✅ FIXED: convert cf-us10-001 → cf.us10-001
+LANDSCAPE_MODIFIED="cf.${LANDSCAPE#cf-}"
+CF_API="https://api.${LANDSCAPE_MODIFIED}.hana.ondemand.com"
+
 
 echo "✅ CF API Endpoint: $CF_API"
- 
+
 # === Login to Cloud Foundry via SSO ===
 echo "🔐 Logging into Cloud Foundry via SSO..."
 cf login -a "$CF_API" --sso
@@ -83,7 +87,7 @@ if [ $? -ne 0 ]; then
   echo "❌ CF login failed."
   exit 1
 fi
- 
+
 # === Target Org and Create Space ===
 echo "🎯 Targeting Org: $CF_ORG_NAME"
 cf target -o "$CF_ORG_NAME"
