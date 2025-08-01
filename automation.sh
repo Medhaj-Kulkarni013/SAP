@@ -108,4 +108,3 @@ APP_NAME="hello-python"
 echo "🚀 Deploying app: $APP_NAME"
 cd "$APP_DIR"
 cf push "$APP_NAME"
-#SAP BTP Command Line Interface
